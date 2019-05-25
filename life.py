@@ -49,17 +49,18 @@ class Grid():
             neighbors.append(row)
 
         return neighbors
+
     def countNeighbours(self, x, y):
         try:
             count = 0
-            #if (self.getCell(x-1,y-1) == np.array([1,0])).all(): count += 1
+            if (self.getCell(x-1,y-1) == np.array([1,0])).all(): count += 1
             if (self.getCell(x,y-1) == np.array([1,0])).all(): count += 1
-            #if (self.getCell(x+1,y-1) == np.array([1,0])).all(): count += 1
+            if (self.getCell(x+1,y-1) == np.array([1,0])).all(): count += 1
             if (self.getCell(x-1,y) == np.array([1,0])).all(): count += 1
             if (self.getCell(x+1,y) == np.array([1,0])).all(): count += 1
-            #if (self.getCell(x-1,y+1) == np.array([1,0])).all(): count += 1
+            if (self.getCell(x-1,y+1) == np.array([1,0])).all(): count += 1
             if (self.getCell(x,y+1) == np.array([1,0])).all(): count += 1
-            #if (self.getCell(x+1,y+1) == np.array([1,0])).all(): count += 1
+            if (self.getCell(x+1,y+1) == np.array([1,0])).all(): count += 1
         except:
             return 0
         return count
@@ -79,7 +80,7 @@ class debugText():
         self.screen = kwargs.get("screen",self.screen)
         self.clock = kwargs.get("clock",self.clock)
 
-def init_grid(grid, background):
+def init_grid(grid, background, grid2, background2):
     for x in range(0, WIN_WIDTH // PIXEL_SIZE):
         for y in range(0, WIN_HEIGHT // PIXEL_SIZE):
             a = random.random()
@@ -87,10 +88,17 @@ def init_grid(grid, background):
 
             grid.setCell(x, y, np.array([a,b]))
             drawSquare(background, x, y, grid.getCell(x,y))
+            
+            if b >= 0.5:
+                grid.setCell(x, y, np.array([0,1]))
+                drawSquareClassic(background2, x, y)
+            else:
+                grid.setCell(x, y, np.array([1,0]))
+                drawSquareClassic(background2, x, y)
 
 def drawSquare(background, x, y, array):
     #Cell colour
-    value = 255.0 - np.floor((array[1]**2)*255) 
+    value = 255.0 - np.floor((array[1]**2)*255)
     colour = value, value, value
     pygame.draw.rect(background, colour, (x * PIXEL_SIZE, y * PIXEL_SIZE, PIXEL_SIZE, PIXEL_SIZE))
 
@@ -134,10 +142,11 @@ def main():
 
     final = pygame.time.get_ticks()
     grid = Grid()
+    grid2 = Grid()
     debug = debugText(screen, clock)
 
     #Create the orginal grid pattern randomly
-    init_grid(grid, background)
+    init_grid(grid, background, grid2, background2)
 
     screen.blit(background2, (0, 0))
     screen.blit(interspace, (WIN_WIDTH, 0))
@@ -178,7 +187,7 @@ def main():
 
         else:
             newgrid = grid
-            classicgrid = grid
+            classicgrid = grid2
 
         debug.update()
 
@@ -205,6 +214,7 @@ def main():
 
         #Draws the new grid
         grid = newgrid
+        grid2 = classicgrid
 
         #Updates screen
         screen.blit(background2, (0, 0))
