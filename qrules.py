@@ -7,7 +7,7 @@ def liveliness(nhood):
     a=0.0
     for i, v in enumerate(nhood):
         if i != 5:
-            a+=v[1]
+            a+=v[0][1]
     return a
 
 
