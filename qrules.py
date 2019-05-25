@@ -29,7 +29,6 @@ def SQGOL(nhood):
     else:
         value = dead
     value = value/np.linalg.norm(value)
-    print(value)
     return value 
 
 def DSQGOL(nhood):

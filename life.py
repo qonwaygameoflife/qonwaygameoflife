@@ -67,11 +67,14 @@ class debugText():
 def init_grid(grid, background):
     for x in range(0, WIN_WIDTH // PIXEL_SIZE):
         for y in range(0, WIN_HEIGHT // PIXEL_SIZE):
-            a = random.random()
-            b = math.sqrt(1 - a**2)
-
-            grid.setCell(x, y, np.array([a,b]))
+            grid.setCell(x, y, random_cell())
             drawSquare(background, x, y, grid.getCell(x,y))
+
+def random_cell():
+    a = random.random()
+    b = math.sqrt(1 - a**2)
+
+    return np.array([a,b])
 
 def drawSquare(background, x, y, array):
     #Cell colour
@@ -154,7 +157,7 @@ def main():
                 while actionDown:
                     x = pygame.mouse.get_pos()[0] // PIXEL_SIZE
                     y = pygame.mouse.get_pos()[1] // PIXEL_SIZE
-                    newgrid.setCell(x, y, np.array([0,1]))
+                    newgrid.setCell(x, y, random_cell())
                     drawSquare(background, x, y, newgrid.getCell(x,y))
                     
                     for event in pygame.event.get():
