@@ -67,7 +67,7 @@ def init_grid(grid, background):
 
 def drawSquare(background, x, y, array):
     #Cell colour
-    value = np.floor((array[1]**2)*255) % 255
+    value = np.floor((array[1]**2)*255) 
     colour = value, value, value
     pygame.draw.rect(background, colour, (x * PIXEL_SIZE, y * PIXEL_SIZE, PIXEL_SIZE, PIXEL_SIZE))       
 
