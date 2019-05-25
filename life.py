@@ -88,12 +88,12 @@ def init_grid(grid, background, grid2, background2):
 
             grid.setCell(x, y, np.array([a,b]))
             drawSquare(background, x, y, grid.getCell(x,y))
-            
+
             if b >= 0.5:
-                grid.setCell(x, y, np.array([0,1]))
+                grid2.setCell(x, y, np.array([0,1]))
                 drawSquareClassic(background2, x, y)
             else:
-                grid.setCell(x, y, np.array([1,0]))
+                grid2.setCell(x, y, np.array([1,0]))
                 drawSquareClassic(background2, x, y)
 
 def drawSquare(background, x, y, array):
@@ -168,18 +168,18 @@ def main():
                     newgrid.setCell(x, y, SQGOL(subgrid))
                     drawSquare(background, x, y, newgrid.getCell(x,y))
 					#Classic game of life
-                    if (grid.getCell(x, y) == np.array([0,1])).all():
-                        if grid.countNeighbours(x, y) < 2:
+                    if (grid2.getCell(x, y) == np.array([0,1])).all():
+                        if grid2.countNeighbours(x, y) < 2:
                             classicgrid.setCell(x, y, np.array([1,0]))
 
-                        elif grid.countNeighbours(x, y) <= 3:
+                        elif grid2.countNeighbours(x, y) <= 3:
                             classicgrid.setCell(x, y, np.array([0,1]))
                             drawSquareClassic(background2, x, y)
 
-                        elif grid.countNeighbours(x, y) >= 4:
+                        elif grid2.countNeighbours(x, y) >= 4:
                             classicgrid.setCell(x, y, np.array([1,0]))
                     else:
-                        if grid.countNeighbours(x, y) == 3:
+                        if grid2.countNeighbours(x, y) == 3:
                             classicgrid.setCell(x, y, np.array([0,1]))
                             drawSquareClassic(background2, x, y)
 
