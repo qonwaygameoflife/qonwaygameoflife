@@ -1,4 +1,5 @@
 import pygame, copy, math, random
+import numpy as np
 pygame.init()
 
 PIXEL_SIZE = 5
@@ -11,7 +12,7 @@ TARGET_FPS = 60
 
 class Grid():
     def __init__(self, *args, **kwargs):
-        self.grid = [[False for i in range(WIN_HEIGHT // PIXEL_SIZE)] for i in range(WIN_WIDTH // PIXEL_SIZE)]
+        self.grid = [[np.array([0,0]) for i in range(WIN_HEIGHT // PIXEL_SIZE)] for i in range(WIN_WIDTH // PIXEL_SIZE)]
 
     def setCell(self, x, y, stat):
         self.grid[x][y] = stat
@@ -56,9 +57,9 @@ class debugText():
         self.active = kwargs.get("active",self.active)
  
  
-def drawSquare(background, x, y):
-    #Random cell colour
-    colour = random.randint(0,255), random.randint(0,255), random.randint(0,255)
+def drawSquare(background, x, y, array):
+    #Cell colour
+    colour = np.floor(array[1]**2*255), np.floor(array[1]**2*255), np.floor(array[1]**2*255)
     pygame.draw.rect(background, colour, (x * PIXEL_SIZE, y * PIXEL_SIZE, PIXEL_SIZE, PIXEL_SIZE))       
 
 
@@ -82,8 +83,8 @@ def main():
     for x in range(0, WIN_WIDTH // PIXEL_SIZE):
         for y in range(0, WIN_HEIGHT // PIXEL_SIZE):
             if random.randint(0, 10) == 1:
-                grid.setCell(x, y, True)
-                drawSquare(background, x, y)
+                grid.setCell(x, y, np.array([1,0]))
+                drawSquare(background, x, y, grid.getCell(x,y))
 
     screen.blit(background, (0, 0)) 
     pygame.display.flip()
@@ -99,22 +100,24 @@ def main():
             for x in range(0, WIN_WIDTH // PIXEL_SIZE):
                 for y in range(0, WIN_HEIGHT // PIXEL_SIZE):
                     if grid.getCell(x, y):
-                        if grid.countNeighbours(x, y) < 2:
-                            newgrid.setCell(x, y, False)
+                        # if grid.countNeighbours(x, y) < 2:
+                            #Set value
+                            # newgrid.setCell(x, y, False)
 
-                        elif grid.countNeighbours(x, y) <= 3:
-                            newgrid.setCell(x, y, True)
-                            numActive += 1
-                            drawSquare(background, x, y)
+                        # elif grid.countNeighbours(x, y) <= 3:
+                            
+                            # newgrid.setCell(x, y, True)
+                            # numActive += 1
+                            # drawSquare(background, x, y)
 
-                        elif grid.countNeighbours(x, y) >= 4:
-                            newgrid.setCell(x, y, False)
+                        # elif grid.countNeighbours(x, y) >= 4:
+                            # newgrid.setCell(x, y, False)
 
-                    else:
-                        if grid.countNeighbours(x, y) == 3:
-                            newgrid.setCell(x, y, True)
-                            numActive += 1
-                            drawSquare(background, x, y)
+                   # else:
+                      #  if grid.countNeighbours(x, y) == 3:
+                         #   newgrid.setCell(x, y, True)
+                         #   numActive += 1
+                         #   drawSquare(background, x, y)
 
             final = pygame.time.get_ticks() 
 
