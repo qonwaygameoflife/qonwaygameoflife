@@ -53,14 +53,14 @@ class Grid():
     def countNeighbours(self, x, y):
         try:
             count = 0
-            if (self.getCell(x-1,y-1) == np.array([1,0])).all(): count += 1
-            if (self.getCell(x,y-1) == np.array([1,0])).all(): count += 1
-            if (self.getCell(x+1,y-1) == np.array([1,0])).all(): count += 1
-            if (self.getCell(x-1,y) == np.array([1,0])).all(): count += 1
-            if (self.getCell(x+1,y) == np.array([1,0])).all(): count += 1
-            if (self.getCell(x-1,y+1) == np.array([1,0])).all(): count += 1
-            if (self.getCell(x,y+1) == np.array([1,0])).all(): count += 1
-            if (self.getCell(x+1,y+1) == np.array([1,0])).all(): count += 1
+            if (self.getCell(x-1,y-1) == np.array([1.,0.])).all(): count += 1
+            if (self.getCell(x,y-1) == np.array([1.,0.])).all(): count += 1
+            if (self.getCell(x+1,y-1) == np.array([1.,0.])).all(): count += 1
+            if (self.getCell(x-1,y) == np.array([1.,0.])).all(): count += 1
+            if (self.getCell(x+1,y) == np.array([1.,0.])).all(): count += 1
+            if (self.getCell(x-1,y+1) == np.array([1.,0.])).all(): count += 1
+            if (self.getCell(x,y+1) == np.array([1.,0.])).all(): count += 1
+            if (self.getCell(x+1,y+1) == np.array([1.,0.])).all(): count += 1
         except:
             return 0
         return count
