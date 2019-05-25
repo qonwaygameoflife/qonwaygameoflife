@@ -1,7 +1,7 @@
 import numpy as np
 from qiskit import QuantumCircuit, ClassicalRegister, QuantumRegister
 from qiskit import Aer, execute
-from qiskit.quantum_info import Pauli, state_fidelity, basis_state, process_fidelity
+from qiskit.tools.qi.qi import partial_trace
 
 def liveliness(nhood):
     v=nhood
@@ -33,38 +33,57 @@ def SQGOL(nhood):
     return value 
 
 def init_quantum(nhood):
-    return None
+    qr = QuantumRegister(9,'qr')
+    qc = QuantumCircuit(qr,name='conway')
+    counter  = 0
+    for i,v in enumerate(nhood):
+        for j in v:
+            print(j[0])
+            qc.initialize(tuple(j[0]),qr[counter])
+            counter+=1
+    return qc, qr
+        
 
 def DSQGOL(nhood):
-    a = liveliness(nhood)
-    value =  nhood[1,1]
-    alive = [0,1]
-    dead = [1,0]
-    if value[1] > 0.98:
+    a = liveliness(nhood)[0]
+    print(a)
+    value =  nhood[1][1]
+    alive = [1,0]
+    dead = [0,1]
+    
+    if value[0][0] > 0.98:
         if (a < 1 ):
             value = dead
         elif (a > 1 and a <= 1.5):
             value = dead
         elif (a > 1.5 and a <= 2.5):
-            value = 0
+            qci, qri = init_quantum(nhood)
+            for i in range(9):
+                if i !=5:
+                    qci.cx(qri[5],qri[i])
+                job = execute(qci,Aer.get_backend('statevector_simulator'))
+                results = job.result().get_statevector()
+                value = partial_trace(results,[0,1,2,3,4,6,7,8])
         elif (a > 2.5 and a <= 3.5):
-            value = 0
-        elif (a > 3.5 and a <= 4.5):
-            value = 0
-        elif (a > 4.5):
+            value = alive
+        elif (a > 3.5):
             value = dead
-    elif value[1] < 0.02:
+    elif value[0][0] < 0.02:
         if (a < 1 ):
             value = dead
         elif (a > 1 and a <= 1.5):
             value = dead
         elif (a > 1.5 and a <= 2.5):
-            value = 0
+            qc, qr = init_quantum(nhood)
+            for i in range(9):
+                if i !=5:
+                    qci.cx(qri[5],qri[i])
+                job = execute(qc,Aer.get_backend('statevector_simulator'))
+                results = job.result().get_statevector()
+                value = partial_trace(results,[0,1,2,3,4,6,7,8])
         elif (a > 2.5 and a <= 3.5):
-            value = 0
-        elif (a > 3.5 and a <= 4.5):
-            value = 0
-        elif (a > 4.5):
+            value = alive
+        elif (a > 3.5):
             value = dead   
     else:
         if (a < 1 ):
@@ -72,11 +91,20 @@ def DSQGOL(nhood):
         elif (a > 1 and a <= 1.5):
             value = dead
         elif (a > 1.5 and a <= 2.5):
-            value = 0
+            qci, qri = init_quantum(nhood)
+            for i in range(9):
+                if i !=5:
+                    qci.cx(qri[5],qri[i])
+                job = execute(qc,Aer.get_backend('statevector_simulator'))
+                results = job.result().get_statevector()
+                value = partial_trace(results,[0,1,2,3,4,6,7,8])
         elif (a > 2.5 and a <= 3.5):
-            value = 0
-        elif (a > 3.5 and a <= 4.5):
-            value = 0
-        elif (a > 4.5):
-            value = dead     
-    
+            qri = QuantumRegister(1,'qr')
+            qci = QuantumCircuit(qc,name='conway')
+            qci.initialize(value,qri[i])
+            qci.measure(qr(5))
+            job = execute(qci,Aer.get_backend('statevector_simulator'))
+            value = job.result().get_statevector()
+        elif (a > 3.5):
+            value=dead     
+    return value
