@@ -1,5 +1,6 @@
 import pygame, copy, math, random
 import numpy as np
+from qrules import SQGOL
 pygame.init()
 
 PIXEL_SIZE = 5
@@ -55,14 +56,20 @@ class debugText():
         self.screen = kwargs.get("screen",self.screen)
         self.clock = kwargs.get("clock",self.clock)
  
- 
+def init_grid(grid, background):
+    for x in range(0, WIN_WIDTH // PIXEL_SIZE):
+        for y in range(0, WIN_HEIGHT // PIXEL_SIZE):
+            a_pow = random.random()
+            b_pow = 1 - a_pow
+
+            grid.setCell(x, y, np.array([math.sqrt(a_pow),math.sqrt(b_pow)]))
+            drawSquare(background, x, y, grid.getCell(x,y))
+
 def drawSquare(background, x, y, array):
     #Cell colour
-    colour = np.floor(array[1]**2*255), np.floor(array[1]**2*255), np.floor(array[1]**2*255)
+    value = np.floor((array[1]**2)*255)
+    colour = value, value, value
     pygame.draw.rect(background, colour, (x * PIXEL_SIZE, y * PIXEL_SIZE, PIXEL_SIZE, PIXEL_SIZE))       
-
-def mask(kernel_grid):
-    return np.array([1,0])
 
 def main():
     screen = pygame.display.set_mode((WIN_WIDTH, WIN_HEIGHT))
@@ -81,11 +88,7 @@ def main():
     debug = debugText(screen, clock)  
 
     #Create the orginal grid pattern randomly
-    for x in range(0, WIN_WIDTH // PIXEL_SIZE):
-        for y in range(0, WIN_HEIGHT // PIXEL_SIZE):
-            if random.randint(0, 10) == 1:
-                grid.setCell(x, y, np.array([0,1]))
-                drawSquare(background, x, y, grid.getCell(x,y))
+    init_grid(grid, background)
 
     screen.blit(background, (0, 0)) 
     pygame.display.flip()
@@ -100,8 +103,8 @@ def main():
             for x in range(0, WIN_WIDTH // PIXEL_SIZE):
                 for y in range(0, WIN_HEIGHT // PIXEL_SIZE):
                     subgrid = grid.getNeighboursAround(x,y)
-                    newgrid.setCell(x,y,mask(subgrid))
-                    drawSquare(background, x, y, newgrid.getCell(x,y))
+                    newgrid.setCell(x,y,SQGOL(subgrid))
+                    drawSquare(background,x,y,newgrid.getCell(x,y))
 
             final = pygame.time.get_ticks() 
 
