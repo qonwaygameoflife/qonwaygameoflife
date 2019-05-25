@@ -18,6 +18,7 @@ SUPERPOSITION_UP_LIMIT_ARG = 'sp_up'
 SUPERPOSITION_UP_LIMIT_VAL = 0.51
 SUPERPOSITION_DOWN_LIMIT_ARG = 'sp_down'
 SUPERPOSITION_DOWN_LIMIT_VAL = 0.48
+FILE_ARG = 'json'
 
 #Update every 2ms
 REFRESH = 2
@@ -135,7 +136,7 @@ def drawSquareClassic(background, x, y):
     colour = 255, 255, 255
     pygame.draw.rect(background, colour, (x * PIXEL_SIZE, y * PIXEL_SIZE, PIXEL_SIZE, PIXEL_SIZE))
 
-def main(sp_up_limit, sp_down_limit):
+def main(sp_up_limit, sp_down_limit, file_path):
     screen = pygame.display.set_mode((2*WIN_WIDTH+WIN_INTERSPACE, 2*WIN_HEIGHT+WIN_INTERSPACE))
 
     background_Final = pygame.Surface(screen.get_size())
@@ -294,6 +295,11 @@ if __name__ == "__main__":
                         type=float,
                         default=SUPERPOSITION_DOWN_LIMIT_VAL,
                         help='Superposition DOWN limit (default: {})'.format(SUPERPOSITION_DOWN_LIMIT_VAL))
+    parser.add_argument('--{}'.format(FILE_ARG),
+                        help='Path to JSON file with pre-configured seed',
+                        default=None)
     args = vars(parser.parse_args())
 
-    main(args[SUPERPOSITION_UP_LIMIT_ARG], args[SUPERPOSITION_DOWN_LIMIT_ARG])
+    main(args[SUPERPOSITION_UP_LIMIT_ARG],
+         args[SUPERPOSITION_DOWN_LIMIT_ARG],
+         args[FILE_ARG])
