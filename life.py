@@ -51,20 +51,17 @@ class Grid():
         return neighbors
 
     def countNeighbours(self, x, y):
-        try:
-            count = 0
-            if (self.getCell(x-1,y-1) == np.array([1.,0.])).all(): count += 1
-            if (self.getCell(x,y-1) == np.array([1.,0.])).all(): count += 1
-            if (self.getCell(x+1,y-1) == np.array([1.,0.])).all(): count += 1
-            if (self.getCell(x-1,y) == np.array([1.,0.])).all(): count += 1
-            if (self.getCell(x+1,y) == np.array([1.,0.])).all(): count += 1
-            if (self.getCell(x-1,y+1) == np.array([1.,0.])).all(): count += 1
-            if (self.getCell(x,y+1) == np.array([1.,0.])).all(): count += 1
-            if (self.getCell(x+1,y+1) == np.array([1.,0.])).all(): count += 1
-        except:
-            return 0
-        return count
+        neighbours = self.getNeighboursAround(x,y)
 
+        count = 0
+        for x in range(3):
+            for y in range(3):
+                if x == 1 and y == 1:
+                    continue
+    
+                count += 1 if (neighbours[x][y] == np.array([0.,1.])).all() else 0
+
+        return count
 
 class debugText():
     def __init__(self, screen, clock, *args, **kwargs):
@@ -81,8 +78,8 @@ class debugText():
         self.clock = kwargs.get("clock",self.clock)
 
 def init_grid(grid, background, grid2, background2):
-    for x in range(0, WIN_WIDTH // PIXEL_SIZE):
-        for y in range(0, WIN_HEIGHT // PIXEL_SIZE):
+    for x in range(X_LIMIT):
+        for y in range(Y_LIMIT):
             a = random.random()
             b = math.sqrt(1 - a**2)
 
@@ -116,13 +113,13 @@ def main():
 
     background_Final = pygame.Surface(screen.get_size())
 
-    rect1 = pygame.Rect(0,0,WIN_WIDTH,WIN_HEIGHT)
-    background = background_Final.subsurface(rect1)
-    background = background.convert()
-    background.fill((0, 0, 0))
+    rect_quantum = pygame.Rect(0,0,WIN_WIDTH,WIN_HEIGHT)
+    background_quantum = background_Final.subsurface(rect_quantum)
+    background_quantum = background_quantum.convert()
+    background_quantum.fill((0, 0, 0))
 
-    rect = pygame.Rect(WIN_WIDTH+100,0,100,WIN_HEIGHT)
-    interspace = background_Final.subsurface(rect)
+    rect_interspace = pygame.Rect(WIN_WIDTH+100,0,100,WIN_HEIGHT)
+    interspace = background_Final.subsurface(rect_interspace)
     interspace = interspace.convert()
     interspace.fill((0, 0, 0))
 
@@ -130,10 +127,10 @@ def main():
         for y in range(0, WIN_HEIGHT // PIXEL_SIZE):
             drawBlankSpace(interspace, x, y)
 
-    rect2 = pygame.Rect(WIN_WIDTH+100,0,WIN_WIDTH,WIN_HEIGHT)
-    background2 = background_Final.subsurface(rect2)
-    background2 = background2.convert()
-    background2.fill((0, 0, 0))
+    rect_classical = pygame.Rect(WIN_WIDTH+100,0,WIN_WIDTH,WIN_HEIGHT)
+    background_classical = background_Final.subsurface(rect_classical)
+    background_classical = background_classical.convert()
+    background_classical.fill((0, 0, 0))
 
     clock = pygame.time.Clock()
 
@@ -141,53 +138,53 @@ def main():
     actionDown = False
 
     final = pygame.time.get_ticks()
-    grid = Grid()
-    grid2 = Grid()
+    grid_quantum = Grid()
+    grid_classical = Grid()
     debug = debugText(screen, clock)
 
     #Create the orginal grid pattern randomly
-    init_grid(grid, background, grid2, background2)
+    init_grid(grid_quantum, background_quantum, grid_classical, background_classical)
 
-    screen.blit(background2, (0, 0))
+    screen.blit(background_classical, (0, 0))
     screen.blit(interspace, (WIN_WIDTH, 0))
-    screen.blit(background, (WIN_WIDTH+100, 0))
+    screen.blit(background_quantum, (WIN_WIDTH+100, 0))
     pygame.display.flip()
 
     while isActive:
         clock.tick(TARGET_FPS)
-        newgrid = Grid()
-        classicgrid = Grid()
+        newgrid_quantum = Grid()
+        newgrid_classical = Grid()
 
         if pygame.time.get_ticks() - final > REFRESH:
-            background.fill((0, 0, 0))
-            background2.fill((0, 0, 0))
+            background_quantum.fill((0, 0, 0))
+            background_classical.fill((0, 0, 0))
 
-            for x in range(0, WIN_WIDTH // PIXEL_SIZE):
-                for y in range(0, WIN_HEIGHT // PIXEL_SIZE):
-                    subgrid = grid.getNeighboursAround(x, y)
-                    newgrid.setCell(x, y, SQGOL(subgrid))
-                    drawSquare(background, x, y, newgrid.getCell(x,y))
+            for x in range(0, X_LIMIT):
+                for y in range(0, Y_LIMIT):
+                    subgrid = grid_quantum.getNeighboursAround(x, y)
+                    newgrid_quantum.setCell(x, y, SQGOL(subgrid))
+                    drawSquare(background_quantum, x, y, newgrid_quantum.getCell(x,y))
 					#Classic game of life
-                    if (grid2.getCell(x, y) == np.array([0,1])).all():
-                        if grid2.countNeighbours(x, y) < 2:
-                            classicgrid.setCell(x, y, np.array([1,0]))
+                    if (grid_classical.getCell(x, y) == np.array([0,1])).all():
+                        if grid_classical.countNeighbours(x, y) < 2:
+                            grid_classical.setCell(x, y, np.array([1,0]))
 
-                        elif grid2.countNeighbours(x, y) <= 3:
-                            classicgrid.setCell(x, y, np.array([0,1]))
-                            drawSquareClassic(background2, x, y)
+                        elif grid_classical.countNeighbours(x, y) <= 3:
+                            newgrid_classical.setCell(x, y, np.array([0,1]))
+                            drawSquareClassic(background_classical, x, y)
 
-                        elif grid2.countNeighbours(x, y) >= 4:
-                            classicgrid.setCell(x, y, np.array([1,0]))
+                        elif grid_classical.countNeighbours(x, y) >= 4:
+                            newgrid_classical.setCell(x, y, np.array([1,0]))
                     else:
-                        if grid2.countNeighbours(x, y) == 3:
-                            classicgrid.setCell(x, y, np.array([0,1]))
-                            drawSquareClassic(background2, x, y)
+                        if grid_classical.countNeighbours(x, y) == 3:
+                            newgrid_classical.setCell(x, y, np.array([0,1]))
+                            drawSquareClassic(background_classical, x, y)
 
             final = pygame.time.get_ticks()
 
         else:
-            newgrid = grid
-            classicgrid = grid2
+            newgrid_quantum = grid_quantum
+            newgrid_classical = grid_classical
 
         debug.update()
 
@@ -213,13 +210,13 @@ def main():
                     pygame.display.flip()
 
         #Draws the new grid
-        grid = newgrid
-        grid2 = classicgrid
+        grid_quantum = newgrid_quantum
+        grid_classical = newgrid_classical
 
         #Updates screen
-        screen.blit(background2, (0, 0))
+        screen.blit(background_classical, (0, 0))
         screen.blit(interspace, (WIN_WIDTH, 0))
-        screen.blit(background, (WIN_WIDTH+100, 0))
+        screen.blit(background_quantum, (WIN_WIDTH+100, 0))
         debug.update()
         debug.printText()
         pygame.display.flip()
