@@ -1,5 +1,6 @@
 import pygame, copy, math, random
 import numpy as np
+import argparse
 
 from qrules import SQGOL, liveliness
 
@@ -13,6 +14,10 @@ Y_LIMIT = WIN_HEIGHT // PIXEL_SIZE
 X_LIMIT = WIN_WIDTH // PIXEL_SIZE
 ALIVE = np.array([1,0])
 DEAD = np.array([0,1])
+SUPERPOSITION_UP_LIMIT_ARG = 'sp_up'
+SUPERPOSITION_UP_LIMIT_VAL = 0.51
+SUPERPOSITION_DOWN_LIMIT_ARG = 'sp_down'
+SUPERPOSITION_DOWN_LIMIT_VAL = 0.48
 
 #Update every 2ms
 REFRESH = 2
@@ -82,10 +87,17 @@ class debugText():
         self.screen = kwargs.get("screen",self.screen)
         self.clock = kwargs.get("clock",self.clock)
 
-def init_grid(grid, background, grid2, background2, grid_fully_quantum, background_fully_quantum):
+def init_grid(sp_up_limit,
+              sp_down_limit,
+              grid,
+              background,
+              grid2,
+              background2,
+              grid_fully_quantum,
+              background_fully_quantum):
     for x in range(X_LIMIT):
         for y in range(Y_LIMIT):
-            cell = random_cell()
+            cell = random_cell(sp_up_limit, sp_down_limit)
             grid.setCell(x, y, cell)
             drawSquare(background, x, y, cell)
 
@@ -96,13 +108,13 @@ def init_grid(grid, background, grid2, background2, grid_fully_quantum, backgrou
                 grid2.setCell(x, y, ALIVE)
                 drawSquareClassic(background2, x, y)
 
-def random_cell():
+def random_cell(up_limit, down_limit):
     a = random.random()
     b = math.sqrt(1 - a**2)
-    if b >= 0.99:
+    if b >= up_limit:
         b = 1.
         a = 0.
-    elif b <= 0.97:
+    elif b <= down_limit:
         b = 0.
         a = 1.
 
@@ -123,7 +135,7 @@ def drawSquareClassic(background, x, y):
     colour = 255, 255, 255
     pygame.draw.rect(background, colour, (x * PIXEL_SIZE, y * PIXEL_SIZE, PIXEL_SIZE, PIXEL_SIZE))
 
-def main():
+def main(sp_up_limit, sp_down_limit):
     screen = pygame.display.set_mode((2*WIN_WIDTH+WIN_INTERSPACE, 2*WIN_HEIGHT+WIN_INTERSPACE))
 
     background_Final = pygame.Surface(screen.get_size())
@@ -173,7 +185,14 @@ def main():
     debug = debugText(screen, clock)
 
     #Create the orginal grid pattern randomly
-    init_grid(grid_quantum, background_quantum, grid_classical, background_classical, grid_fully_quantum, background_fully_quantum)
+    init_grid(sp_up_limit,
+              sp_down_limit,
+              grid_quantum,
+              background_quantum,
+              grid_classical,
+              background_classical,
+              grid_fully_quantum,
+              background_fully_quantum)
 
     screen.blit(background_classical, (0, 0))
     screen.blit(interspace, (WIN_WIDTH, 0))
@@ -235,8 +254,8 @@ def main():
                     x = pygame.mouse.get_pos()[0] // PIXEL_SIZE
                     y = pygame.mouse.get_pos()[1] // PIXEL_SIZE
                     newgrid_classical.setCell(x, y, ALIVE)
-                    newgrid_quantum.setCell(x,y,random_cell())
-                    newgrid_fully_quantum.setCell(x,y,random_cell())
+                    newgrid_quantum.setCell(x,y,random_cell(sp_up_limit, sp_down_limit))
+                    newgrid_fully_quantum.setCell(x,y,random_cell(sp_up_limit, sp_down_limit))
 
                     drawSquareClassic(background_classical, x, y)
                     drawSquare(background_quantum, x, y, newgrid_quantum.getCell(x,y))
@@ -266,4 +285,15 @@ def main():
         pygame.display.flip()
 
 if __name__ == "__main__":
-    main()
+    parser = argparse.ArgumentParser(description='Quantum Game of Life')
+    parser.add_argument('--{}'.format(SUPERPOSITION_UP_LIMIT_ARG),
+                        type=float,
+                        default=SUPERPOSITION_UP_LIMIT_VAL,
+                        help='Superposition UP limit (default: {})'.format(SUPERPOSITION_UP_LIMIT_VAL))
+    parser.add_argument('--{}'.format(SUPERPOSITION_DOWN_LIMIT_ARG),
+                        type=float,
+                        default=SUPERPOSITION_DOWN_LIMIT_VAL,
+                        help='Superposition DOWN limit (default: {})'.format(SUPERPOSITION_DOWN_LIMIT_VAL))
+    args = vars(parser.parse_args())
+
+    main(args[SUPERPOSITION_UP_LIMIT_ARG], args[SUPERPOSITION_DOWN_LIMIT_ARG])
