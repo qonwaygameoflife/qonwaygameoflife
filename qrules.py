@@ -27,7 +27,7 @@ def SQGOL(nhood):
     elif (a > 2 and a <= 3):
         value = ((np.sqrt(2)+1)*(3-a)*value+(a-2)*alive)#(((np.sqrt(2)+1)*(3-a))**2+(a-2)**2)
     elif (a > 3 and a <= 4):
-        value = ((np.sqrt(2)+1)*(4-a)*dead+(a-3)*alive)#(((np.sqrt(2)+1)*(4-a))**2+(a-3)**2)
+        value = ((np.sqrt(2)+1)*(4-a)*alive+(a-3)*dead)#(((np.sqrt(2)+1)*(4-a))**2+(a-3)**2)
     elif a > 4:
         value = dead
     
