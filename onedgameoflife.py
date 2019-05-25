@@ -1,8 +1,11 @@
+#!/usr/bin/env python3
+
+
 import math
 
-from neighbors import neighbors3
+from neighbours import neighbours3
 from qiskit import QuantumCircuit
-from qiskit import BasicAer, execute
+from qiskit import Aer, execute
 from qiskit.aqua.components.oracles import TruthTableOracle
 from qiskit.circuit.reset import reset
 from qiskit.extensions.standard import barrier, h, swap, x
@@ -47,7 +50,7 @@ def make_oracle(qcount):
         value = format(raw_value, '0{}b'.format(qcount))[::-1]
     
         for index in range(qcount):
-            n = neighbors3(index, value)
+            n = neighbours3(index, value)
     
             alive_count = 1 if n[0] == '1' else 0
             alive_count += 1 if n[2] == '1' else 0
@@ -72,17 +75,18 @@ def vector_state_to_summary(state, extract_cells):
         f_index = format(index, '0{}b'.format(circuit_size))
 
         cells = extract_cells(f_index)
-        prob = abs(value)
 
         if cells in summary:
-            summary[cells] += prob
+            summary[cells] += value
         else:
-            summary[cells] = prob
+            summary[cells] = value
 
     return summary
 
 def print_summary(summary, min_prob):
-    for cells, prob in summary.items():
+    for cells, value in summary.items():
+        prob = abs(value)
+
         if prob >= min_prob:
             print('{}  <{}>'.format(format_cells(cells), prob))
 
@@ -101,7 +105,7 @@ def format_cells(cells):
 
     return ' '.join(output)
 
-init_cells = 'XXXX'
+init_cells = 'XXX'
 print('Input:')
 print_cells(init_cells)
 
@@ -112,7 +116,7 @@ oracle_circuit = oracle.construct_circuit()
 init_circuit = make_init_circuit(oracle.variable_register, init_cells)
 circuit = init_circuit + oracle_circuit
 
-backend_sim = BasicAer.get_backend('statevector_simulator')
+backend_sim = Aer.get_backend('statevector_simulator')
 result = execute(circuit, backend_sim).result()
 state = result.get_statevector(circuit)
 
