@@ -32,6 +32,9 @@ def SQGOL(nhood):
     value = value/np.linalg.norm(value)
     return value 
 
+def init_quantum(nhood):
+    return None
+
 def DSQGOL(nhood):
     a = liveliness(nhood)
     value =  nhood[1,1]

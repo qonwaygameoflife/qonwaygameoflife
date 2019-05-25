@@ -99,10 +99,10 @@ def init_grid(grid, background, grid2, background2):
 def random_cell():
     a = random.random()
     b = math.sqrt(1 - a**2)
-    if b >= 0.51:
+    if b >= 0.99:
         b = 1.
         a = 0.
-    elif b <= 0.48:
+    elif b <= 0.97:
         b = 0.
         a = 1.
 
