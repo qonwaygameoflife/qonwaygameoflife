@@ -82,7 +82,12 @@ def init_grid(grid, background, grid2, background2):
         for y in range(Y_LIMIT):
             a = random.random()
             b = math.sqrt(1 - a**2)
-
+            if b >= 0.55:
+                b = 1.
+                a = 0.
+            elif b <= 0.45:
+                b = 0.
+                a = 1.
             grid.setCell(x, y, np.array([a,b]))
             drawSquare(background, x, y, grid.getCell(x,y))
 
