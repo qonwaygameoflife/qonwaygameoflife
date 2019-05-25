@@ -1,6 +1,7 @@
 import pygame, copy, math, random
 import numpy as np
 import argparse
+import json
 
 from qrules import SQGOL, liveliness
 
@@ -116,7 +117,24 @@ def init_grid_file(file_path,
                    background2,
                    grid_fully_quantum,
                    background_fully_quantum):
-    pass
+    with open(file_path) as json_file:
+        data = json.load(json_file)
+        for row in data:
+            for elem in row:
+                cell = json_cell(elem)
+                grid.setCell(x, y, cell)
+                drawSquare(background, x, y, cell)
+
+                if cell[1] >= 0.5:
+                    grid2.setCell(x, y, DEAD)
+                    drawSquareClassic(background2, x, y)
+                else:
+                    grid2.setCell(x, y, ALIVE)
+                    drawSquareClassic(background2, x, y)
+
+def json_cell(a):
+    b = math.sqrt(1 - a**2)
+    return np.array([a,b])
 
 def random_cell(up_limit, down_limit):
     a = random.random()
@@ -146,6 +164,7 @@ def drawSquareClassic(background, x, y):
     pygame.draw.rect(background, colour, (x * PIXEL_SIZE, y * PIXEL_SIZE, PIXEL_SIZE, PIXEL_SIZE))
 
 def main(sp_up_limit, sp_down_limit, file_path):
+    print(file_path)
     screen = pygame.display.set_mode((2*WIN_WIDTH+WIN_INTERSPACE, 2*WIN_HEIGHT+WIN_INTERSPACE))
 
     background_Final = pygame.Surface(screen.get_size())
