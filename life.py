@@ -8,6 +8,7 @@ from qrules import SQGOL, liveliness
 pygame.init()
 
 PIXEL_SIZE = 5
+LINE_WIDTH = 2
 WIN_WIDTH = 480
 WIN_HEIGHT = 360
 WIN_INTERSPACE = 50
@@ -119,18 +120,28 @@ def init_grid_file(file_path,
                    background_fully_quantum):
     with open(file_path) as json_file:
         data = json.load(json_file)
+
+        row_inc = len(data) // 2
+        column_inc = len(data[0]) // 2
+
+        grid_row_inc = X_LIMIT // 2
+        grid_column_inc = Y_LIMIT // 2
+
         for x, row in enumerate(data):
             for y, elem in enumerate(row):
                 cell = json_cell(elem)
-                grid.setCell(x, y, cell)
-                drawSquare(background, x, y, cell)
+                final_x = grid_row_inc - row_inc + x
+                final_y = grid_column_inc - column_inc + y
+
+                grid.setCell(final_x, final_y, cell)
+                drawSquare(background, final_x, final_y, cell)
 
                 if cell[1] >= 0.5:
-                    grid2.setCell(x, y, DEAD)
-                    drawSquareClassic(background2, x, y)
+                    grid2.setCell(final_x, final_y, DEAD)
+                    drawSquareClassic(background2, final_x, final_y)
                 else:
-                    grid2.setCell(x, y, ALIVE)
-                    drawSquareClassic(background2, x, y)
+                    grid2.setCell(final_x, final_y, ALIVE)
+                    drawSquareClassic(background2, final_x, final_y)
 
 def json_cell(a):
     b = math.sqrt(1 - a**2)
@@ -152,7 +163,7 @@ def drawSquare(background, x, y, array):
     #Cell colour
     value = 255.0 - np.floor((array[1]**2)*255)
     colour = value, value, value
-    pygame.draw.rect(background, colour, (x * PIXEL_SIZE, y * PIXEL_SIZE, PIXEL_SIZE, PIXEL_SIZE))
+    pygame.draw.rect(background, colour, (x * PIXEL_SIZE, y * PIXEL_SIZE, PIXEL_SIZE, PIXEL_SIZE), LINE_WIDTH)
 
 def drawBlankSpace(background, x, y):
     #Random cell colour
@@ -161,7 +172,7 @@ def drawBlankSpace(background, x, y):
 
 def drawSquareClassic(background, x, y):
     colour = 255, 255, 255
-    pygame.draw.rect(background, colour, (x * PIXEL_SIZE, y * PIXEL_SIZE, PIXEL_SIZE, PIXEL_SIZE))
+    pygame.draw.rect(background, colour, (x * PIXEL_SIZE, y * PIXEL_SIZE, PIXEL_SIZE, PIXEL_SIZE), LINE_WIDTH)
 
 def main(sp_up_limit, sp_down_limit, file_path):
     print(file_path)
