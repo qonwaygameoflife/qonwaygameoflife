@@ -6,8 +6,9 @@ from qrules import SQGOL, liveliness
 pygame.init()
 
 PIXEL_SIZE = 5
-WIN_WIDTH = 640
-WIN_HEIGHT = 480
+WIN_WIDTH = 480
+WIN_HEIGHT = 360
+WIN_INTERSPACE = 50
 Y_LIMIT = WIN_HEIGHT // PIXEL_SIZE
 X_LIMIT = WIN_WIDTH // PIXEL_SIZE
 ALIVE = np.array([1,0])
@@ -63,7 +64,6 @@ class Grid():
             for y in range(3):
                 if x == 1 and y == 1:
                     continue
-    
                 count += 1 if (neighbours[x][y] == np.array([0.,1.])).all() else 0
 
         return count
@@ -82,7 +82,7 @@ class debugText():
         self.screen = kwargs.get("screen",self.screen)
         self.clock = kwargs.get("clock",self.clock)
 
-def init_grid(grid, background, grid2, background2):
+def init_grid(grid, background, grid2, background2, grid_fully_quantum, background_fully_quantum):
     for x in range(X_LIMIT):
         for y in range(Y_LIMIT):
             cell = random_cell()
@@ -116,7 +116,7 @@ def drawSquare(background, x, y, array):
 
 def drawBlankSpace(background, x, y):
     #Random cell colour
-    colour = (40,40,40)
+    colour = 40,40,40
     pygame.draw.rect(background, colour, (x * PIXEL_SIZE, y * PIXEL_SIZE, PIXEL_SIZE, PIXEL_SIZE))
 
 def drawSquareClassic(background, x, y):
@@ -124,28 +124,42 @@ def drawSquareClassic(background, x, y):
     pygame.draw.rect(background, colour, (x * PIXEL_SIZE, y * PIXEL_SIZE, PIXEL_SIZE, PIXEL_SIZE))
 
 def main():
-    screen = pygame.display.set_mode((2*WIN_WIDTH+100, WIN_HEIGHT))
+    screen = pygame.display.set_mode((2*WIN_WIDTH+WIN_INTERSPACE, 2*WIN_HEIGHT+WIN_INTERSPACE))
 
     background_Final = pygame.Surface(screen.get_size())
 
-    rect_quantum = pygame.Rect(0,0,WIN_WIDTH,WIN_HEIGHT)
-    background_quantum = background_Final.subsurface(rect_quantum)
-    background_quantum = background_quantum.convert()
-    background_quantum.fill((0, 0, 0))
+    rect_classical = pygame.Rect(0,0,WIN_WIDTH,WIN_HEIGHT)
+    background_classical = background_Final.subsurface(rect_classical)
+    background_classical = background_classical.convert()
+    background_classical.fill((0, 0, 0))
 
-    rect_interspace = pygame.Rect(WIN_WIDTH+100,0,100,WIN_HEIGHT)
+    rect_interspace = pygame.Rect(WIN_WIDTH+WIN_INTERSPACE,0,WIN_INTERSPACE,WIN_HEIGHT)
     interspace = background_Final.subsurface(rect_interspace)
     interspace = interspace.convert()
     interspace.fill((0, 0, 0))
 
-    for x in range(0, 100 // PIXEL_SIZE):
+    for x in range(0, WIN_INTERSPACE // PIXEL_SIZE):
         for y in range(0, WIN_HEIGHT // PIXEL_SIZE):
             drawBlankSpace(interspace, x, y)
 
-    rect_classical = pygame.Rect(WIN_WIDTH+100,0,WIN_WIDTH,WIN_HEIGHT)
-    background_classical = background_Final.subsurface(rect_classical)
-    background_classical = background_classical.convert()
-    background_classical.fill((0, 0, 0))
+    rect_quantum = pygame.Rect(WIN_WIDTH+WIN_INTERSPACE,0,WIN_WIDTH,WIN_HEIGHT)
+    background_quantum = background_Final.subsurface(rect_quantum)
+    background_quantum = background_quantum.convert()
+    background_quantum.fill((0, 0, 0))
+
+    rect_interspace_horizontal = pygame.Rect(0,WIN_HEIGHT,2*WIN_WIDTH+WIN_INTERSPACE,WIN_INTERSPACE)
+    interspace_horizontal = background_Final.subsurface(rect_interspace_horizontal)
+    interspace_horizontal = interspace_horizontal.convert()
+    interspace_horizontal.fill((0, 0, 0))
+
+    for x in range(0, (2*WIN_WIDTH+WIN_INTERSPACE) // PIXEL_SIZE):
+        for y in range(0, WIN_INTERSPACE // PIXEL_SIZE):
+            drawBlankSpace(interspace_horizontal, x, y)
+
+    rect_fully_quantum = pygame.Rect(0,0,WIN_WIDTH,WIN_HEIGHT)
+    background_fully_quantum = background_Final.subsurface(rect_quantum)
+    background_fully_quantum = background_fully_quantum.convert()
+    background_fully_quantum.fill((0, 0, 0))
 
     clock = pygame.time.Clock()
 
@@ -155,20 +169,24 @@ def main():
     final = pygame.time.get_ticks()
     grid_quantum = Grid()
     grid_classical = Grid()
+    grid_fully_quantum = Grid()
     debug = debugText(screen, clock)
 
     #Create the orginal grid pattern randomly
-    init_grid(grid_quantum, background_quantum, grid_classical, background_classical)
+    init_grid(grid_quantum, background_quantum, grid_classical, background_classical, grid_fully_quantum, background_fully_quantum)
 
     screen.blit(background_classical, (0, 0))
     screen.blit(interspace, (WIN_WIDTH, 0))
-    screen.blit(background_quantum, (WIN_WIDTH+100, 0))
+    screen.blit(background_quantum, (WIN_WIDTH+WIN_INTERSPACE, 0))
+    screen.blit(interspace_horizontal, (0, WIN_HEIGHT))
+    screen.blit(background_quantum, (WIN_WIDTH/2+WIN_INTERSPACE/2, WIN_HEIGHT+WIN_INTERSPACE))
     pygame.display.flip()
 
     while isActive:
         clock.tick(TARGET_FPS)
         newgrid_quantum = Grid()
         newgrid_classical = Grid()
+        newgrid_fully_quantum = Grid()
 
         if pygame.time.get_ticks() - final > REFRESH:
             background_quantum.fill((0, 0, 0))
@@ -201,6 +219,7 @@ def main():
         else:
             newgrid_quantum = grid_quantum
             newgrid_classical = grid_classical
+            newgrid_fully_quantum = grid_fully_quantum
 
         debug.update()
 
@@ -217,9 +236,11 @@ def main():
                     y = pygame.mouse.get_pos()[1] // PIXEL_SIZE
                     newgrid_classical.setCell(x, y, ALIVE)
                     newgrid_quantum.setCell(x,y,random_cell())
+                    newgrid_fully_quantum.setCell(x,y,random_cell())
 
                     drawSquareClassic(background_classical, x, y)
                     drawSquare(background_quantum, x, y, newgrid_quantum.getCell(x,y))
+                    # drawSquare for fully quantum version left
 
                     for event in pygame.event.get():
                         if event.type == pygame.MOUSEBUTTONUP:
@@ -232,11 +253,14 @@ def main():
         #Draws the new grid
         grid_quantum = newgrid_quantum
         grid_classical = newgrid_classical
+        grid_fully_quantum = newgrid_fully_quantum
 
         #Updates screen
         screen.blit(background_classical, (0, 0))
         screen.blit(interspace, (WIN_WIDTH, 0))
-        screen.blit(background_quantum, (WIN_WIDTH+100, 0))
+        screen.blit(background_quantum, (WIN_WIDTH+WIN_INTERSPACE, 0))
+        screen.blit(interspace_horizontal, (0, WIN_HEIGHT))
+        screen.blit(background_quantum, (WIN_WIDTH/2+WIN_INTERSPACE/2, WIN_HEIGHT+WIN_INTERSPACE))
         debug.update()
         debug.printText()
         pygame.display.flip()
