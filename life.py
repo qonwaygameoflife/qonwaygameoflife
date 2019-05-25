@@ -124,14 +124,14 @@ def init_grid_file(file_path,
         row_inc = len(data) // 2
         column_inc = len(data[0]) // 2
 
-        grid_row_inc = X_LIMIT // 2
-        grid_column_inc = Y_LIMIT // 2
+        grid_x_inc = X_LIMIT // 2
+        grid_y_inc = Y_LIMIT // 2
 
-        for x, row in enumerate(data):
-            for y, elem in enumerate(row):
+        for r, row in enumerate(data):
+            for c, elem in enumerate(row):
                 cell = json_cell(elem)
-                final_x = grid_row_inc - row_inc + x
-                final_y = grid_column_inc - column_inc + y
+                final_x = grid_x_inc - column_inc + c
+                final_y = grid_y_inc - row_inc + r
 
                 grid.setCell(final_x, final_y, cell)
                 drawSquare(background, final_x, final_y, cell)
@@ -191,7 +191,7 @@ def main(sp_up_limit, sp_down_limit, file_path):
     interspace.fill((0, 0, 0))
 
     for x in range(0, WIN_INTERSPACE // PIXEL_SIZE):
-        for y in range(0, WIN_HEIGHT // PIXEL_SIZE):
+        for y in range(Y_LIMIT):
             drawBlankSpace(interspace, x, y)
 
     rect_quantum = pygame.Rect(WIN_WIDTH+WIN_INTERSPACE,0,WIN_WIDTH,WIN_HEIGHT)
