@@ -6,6 +6,8 @@ pygame.init()
 PIXEL_SIZE = 5
 WIN_WIDTH = 640
 WIN_HEIGHT = 480
+Y_LIMIT = WIN_HEIGHT // PIXEL_SIZE
+X_LIMIT = WIN_WIDTH // PIXEL_SIZE
 
 #Update every 2ms
 REFRESH = 2
@@ -13,7 +15,7 @@ TARGET_FPS = 60
 
 class Grid():
     def __init__(self, *args, **kwargs):
-        self.grid = [[np.array([1,0]) for i in range(WIN_HEIGHT // PIXEL_SIZE)] for i in range(WIN_WIDTH // PIXEL_SIZE)]
+        self.grid = [[np.array([1,0]) for i in range(Y_LIMIT)] for i in range(X_LIMIT)]
 
     def setCell(self, x, y, stat):
         self.grid[x][y] = stat
@@ -29,12 +31,18 @@ class Grid():
 
             for sub_y in range(3):
                 actual_x = x - 1 + sub_x
+                if actual_x < 0:
+                    actual_x = X_LIMIT + actual_x
+                elif actual_x >= X_LIMIT:
+                    actual_x -= X_LIMIT
+
                 actual_y = y - 1 + sub_y
-                if (actual_x < 0 or actual_x >= WIN_WIDTH // PIXEL_SIZE or
-                    actual_y < 0 or actual_y >= WIN_HEIGHT // PIXEL_SIZE):
-                    cell = np.array([1,0])
-                else:
-                    cell = self.getCell(actual_x, actual_y)
+                if actual_y < 0:
+                    actual_y = Y_LIMIT + actual_y
+                elif actual_y >= Y_LIMIT:
+                    actual_y -= Y_LIMIT
+
+                cell = self.getCell(actual_x, actual_y)
 
                 row.append(cell)
 
@@ -59,10 +67,10 @@ class debugText():
 def init_grid(grid, background):
     for x in range(0, WIN_WIDTH // PIXEL_SIZE):
         for y in range(0, WIN_HEIGHT // PIXEL_SIZE):
-            a_pow = random.random()
-            b_pow = 1 - a_pow
+            a = random.random()
+            b = math.sqrt(1 - a**2)
 
-            grid.setCell(x, y, np.array([math.sqrt(a_pow),math.sqrt(b_pow)]))
+            grid.setCell(x, y, np.array([a,b]))
             drawSquare(background, x, y, grid.getCell(x,y))
 
 def drawSquare(background, x, y, array):
