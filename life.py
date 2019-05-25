@@ -85,7 +85,7 @@ def init_grid(grid, background, grid2, background2):
         for y in range(0, WIN_HEIGHT // PIXEL_SIZE):
             a = random.random()
             b = math.sqrt(1 - a**2)
-            
+
             grid.setCell(x, y, np.array([a,b]))
             drawSquare(background, x, y, grid.getCell(x,y))
             
