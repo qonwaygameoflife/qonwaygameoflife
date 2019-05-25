@@ -67,16 +67,38 @@ def init_grid(grid, background):
 
 def drawSquare(background, x, y, array):
     #Cell colour
-    value = np.floor((array[1]**2)*255)
+    value = np.floor((array[1]**2)*255) % 255
     colour = value, value, value
     pygame.draw.rect(background, colour, (x * PIXEL_SIZE, y * PIXEL_SIZE, PIXEL_SIZE, PIXEL_SIZE))       
 
+def drawBlankSpace(background, x, y):
+    #Random cell colour
+    colour = (40,40,40)
+    pygame.draw.rect(background, colour, (x * PIXEL_SIZE, y * PIXEL_SIZE, PIXEL_SIZE, PIXEL_SIZE))       
+
 def main():
-    screen = pygame.display.set_mode((WIN_WIDTH, WIN_HEIGHT))
+    screen = pygame.display.set_mode((2*WIN_WIDTH+100, WIN_HEIGHT))
     
-    background = pygame.Surface(screen.get_size())
+    background_Final = pygame.Surface(screen.get_size())
+
+    rect1 = pygame.Rect(0,0,WIN_WIDTH,WIN_HEIGHT)
+    background = background_Final.subsurface(rect1)
     background = background.convert()
     background.fill((0, 0, 0))
+    
+    rect = pygame.Rect(WIN_WIDTH+100,0,100,WIN_HEIGHT)
+    interspace = background_Final.subsurface(rect)
+    interspace = interspace.convert()
+    interspace.fill((0, 0, 0))
+    
+    for x in range(0, 100 // PIXEL_SIZE):
+        for y in range(0, WIN_HEIGHT // PIXEL_SIZE):
+            drawBlankSpace(interspace, x, y)
+    
+    rect2 = pygame.Rect(WIN_WIDTH+100,0,WIN_WIDTH,WIN_HEIGHT)
+    background2 = background_Final.subsurface(rect2)
+    background2 = background2.convert()
+    background2.fill((0, 0, 0))
     
     clock = pygame.time.Clock()
 
@@ -139,6 +161,8 @@ def main():
 
         #Updates screen
         screen.blit(background, (0, 0)) 
+        screen.blit(interspace, (WIN_WIDTH, 0)) 
+        screen.blit(background, (WIN_WIDTH+100, 0)) 
         debug.update()
         debug.printText()
         pygame.display.flip()
