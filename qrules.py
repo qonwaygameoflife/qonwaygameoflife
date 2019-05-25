@@ -29,7 +29,7 @@ def SQGOL(nhood):
         value = ((np.sqrt(2)+1)*(4-a)*alive+(a-3)*dead)#(((np.sqrt(2)+1)*(4-a))**2+(a-3)**2)
     elif a > 4:
         value = dead
-    
+    value = value/np.linalg.norm(value)
     return value 
 
 def DSQGOL(nhood):
