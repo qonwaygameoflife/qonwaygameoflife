@@ -10,7 +10,8 @@ def liveliness(nhood):
             a+=v[1]
     return a
 
-def SQGOL(a, nhood):
+def SQGOL(nhood):
+    a = liveliness(nhood)
     value =  nhood[1,1]
     alive = [0,1]
     dead = [1,0]
@@ -25,7 +26,7 @@ def SQGOL(a, nhood):
         value = (np.sqrt(2)+1)(3-a)*value+(a-2)*alive
     elif (a > 3 and a <= 4):
         value = (np.sqrt(2)+1)(4-a)*alive+(a-3)*dead
-    else :
+    else:
         value = dead
     return value 
 
@@ -33,6 +34,9 @@ def DSQGOL(a,nhood):
     value =  nhood[1,1]
     alive = [0,1]
     dead = [1,0]
-    if (a > 1 and a <= 1.5):
+    if (a < 1.5:
+    elif (a > 1 and a <= 1.5):
         value = dead
+    elif (a < 1.5 and a <= 2.5):
+        value = 
     
