@@ -4,10 +4,9 @@ from qiskit import Aer, execute
 from qiskit.quantum_info import Pauli, state_fidelity, basis_state, process_fidelity
 
 def liveliness(nhood):
-    a=0.0
-    for i, v in enumerate(nhood):
-        if i != 5:
-            a+=v[0][1]
+    v=nhood
+    a = v[0][0][1]+v[0][1][1]+v[0][2][1]+v[1][0][1]+v[1][2][1]+v[2][0][1]+v[2][1][1]+v[2][2][1]
+    
     return a
 
 
