@@ -21,8 +21,25 @@ class Grid():
         return self.grid[x][y]
 
     def getNeighboursAround(self, x, y):
-        return []
-     
+        neighbors = []
+
+        for sub_x in range(3):
+            row = []
+
+            for sub_y in range(3):
+                actual_x = x - 1 + sub_x
+                actual_y = y - 1 + sub_y
+                if actual_x < 0 or actual_y < 0:
+                    cell = np.array([1,0])
+                else:
+                    cell = self.getCell(actual_x, actual_y)
+
+                row.append(cell)
+
+            neighbors.append(row)
+
+        return neighbors
+
 class debugText():
     def __init__(self, screen, clock, *args, **kwargs):
         self.screen = screen
