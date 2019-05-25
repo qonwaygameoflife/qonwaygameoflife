@@ -5,7 +5,7 @@ from qiskit.quantum_info import Pauli, state_fidelity, basis_state, process_fide
 
 def liveliness(nhood):
     v=nhood
-    a = v[0][0][1]+v[0][1][1]+v[0][2][1]+v[1][0][1]+v[1][2][1]+v[2][0][1]+v[2][1][1]+v[2][2][1]
+    a = v[0][0][0]+v[0][1][0]+v[0][2][0]+v[1][0][0]+v[1][2][0]+v[2][0][0]+v[2][1][0]+v[2][2][0]
     
     return a
 
@@ -22,12 +22,12 @@ def SQGOL(nhood):
     if a <= 1:
         value =  dead
     elif (a > 1 and a <= 2):
-        value = ((np.sqrt(2)+1)*(2-a)*dead+(a-1)*value)#(((np.sqrt(2)+1)*(2-a))**2+(a-1)**2)
+        value = ((np.sqrt(2)+1)*2-(np.sqrt(2)+1)*a)*dead+(a-1)*value#(((np.sqrt(2)+1)*(2-a))**2+(a-1)**2)
     elif (a > 2 and a <= 3):
-        value = ((np.sqrt(2)+1)*(3-a)*value+(a-2)*alive)#(((np.sqrt(2)+1)*(3-a))**2+(a-2)**2)
-    elif (a > 3 and a <= 4):
-        value = ((np.sqrt(2)+1)*(4-a)*alive+(a-3)*dead)#(((np.sqrt(2)+1)*(4-a))**2+(a-3)**2)
-    elif a > 4:
+        value = (((np.sqrt(2)+1)*3)-(np.sqrt(2)+1)*a)*value+(a-2)*alive#(((np.sqrt(2)+1)*(3-a))**2+(a-2)**2)
+    elif (a > 3 and a < 4):
+        value = ((np.sqrt(2)+1)*4-(np.sqrt(2)+1)*a)*alive+(a-3)*dead#(((np.sqrt(2)+1)*(4-a))**2+(a-3)**2)
+    elif a >= 4:
         value = dead
     value = value/np.linalg.norm(value)
     return value 
@@ -50,7 +50,7 @@ def DSQGOL(nhood):
             value = 0
         elif (a > 4.5):
             value = dead
-    if value[1] < 0.02:
+    elif value[1] < 0.02:
         if (a < 1 ):
             value = dead
         elif (a > 1 and a <= 1.5):

@@ -5,7 +5,7 @@ Y_LIMIT = 10
 
 class Grid():
     def __init__(self, *args, **kwargs):
-        self.grid = [[np.array([x,y]) for y in range(Y_LIMIT)] for x in range(X_LIMIT)]
+        self.grid = [[np.array([1,0]) for y in range(Y_LIMIT)] for x in range(X_LIMIT)]
 
     def setCell(self, x, y, stat):
         self.grid[x][y] = stat
