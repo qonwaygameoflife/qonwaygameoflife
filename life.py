@@ -102,9 +102,9 @@ def main():
 
             for x in range(0, WIN_WIDTH // PIXEL_SIZE):
                 for y in range(0, WIN_HEIGHT // PIXEL_SIZE):
-                    subgrid = grid.getNeighboursAround(x,y)
-                    newgrid.setCell(x,y,SQGOL(subgrid))
-                    drawSquare(background,x,y,newgrid.getCell(x,y))
+                    subgrid = grid.getNeighboursAround(x, y)
+                    newgrid.setCell(x, y, SQGOL(subgrid))
+                    drawSquare(background, x, y, newgrid.getCell(x,y))
 
             final = pygame.time.get_ticks() 
 
@@ -122,11 +122,10 @@ def main():
                 actionDown = True
 
                 while actionDown:
-                    newgrid.setCell(pygame.mouse.get_pos()[0] / PIXEL_SIZE, 
-                    	pygame.mouse.get_pos()[1] / PIXEL_SIZE, True)
-                    	
-                    drawSquare(background, pygame.mouse.get_pos()[0] / PIXEL_SIZE, 
-                    	pygame.mouse.get_pos()[1] / PIXEL_SIZE)
+                    x = pygame.mouse.get_pos()[0] // PIXEL_SIZE
+                    y = pygame.mouse.get_pos()[1] // PIXEL_SIZE
+                    newgrid.setCell(x, y, np.array([0,1]))
+                    drawSquare(background, x, y, newgrid.getCell(x,y))
                     
                     for event in pygame.event.get():
                         if event.type == pygame.MOUSEBUTTONUP:
