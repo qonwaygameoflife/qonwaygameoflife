@@ -88,14 +88,14 @@ class debugText():
         self.screen = kwargs.get("screen",self.screen)
         self.clock = kwargs.get("clock",self.clock)
 
-def init_grid(sp_up_limit,
-              sp_down_limit,
-              grid,
-              background,
-              grid2,
-              background2,
-              grid_fully_quantum,
-              background_fully_quantum):
+def init_grid_random(sp_up_limit,
+                     sp_down_limit,
+                     grid,
+                     background,
+                     grid2,
+                     background2,
+                     grid_fully_quantum,
+                     background_fully_quantum):
     for x in range(X_LIMIT):
         for y in range(Y_LIMIT):
             cell = random_cell(sp_up_limit, sp_down_limit)
@@ -108,6 +108,15 @@ def init_grid(sp_up_limit,
             else:
                 grid2.setCell(x, y, ALIVE)
                 drawSquareClassic(background2, x, y)
+
+def init_grid_file(file_path,
+                   grid,
+                   background,
+                   grid2,
+                   background2,
+                   grid_fully_quantum,
+                   background_fully_quantum):
+    pass
 
 def random_cell(up_limit, down_limit):
     a = random.random()
@@ -186,14 +195,23 @@ def main(sp_up_limit, sp_down_limit, file_path):
     debug = debugText(screen, clock)
 
     #Create the orginal grid pattern randomly
-    init_grid(sp_up_limit,
-              sp_down_limit,
-              grid_quantum,
-              background_quantum,
-              grid_classical,
-              background_classical,
-              grid_fully_quantum,
-              background_fully_quantum)
+    if file_path is None:
+        init_grid_random(sp_up_limit,
+                         sp_down_limit,
+                         grid_quantum,
+                         background_quantum,
+                         grid_classical,
+                         background_classical,
+                         grid_fully_quantum,
+                         background_fully_quantum)
+    else:
+        init_grid_file(file_path,
+                       grid_quantum,
+                       background_quantum,
+                       grid_classical,
+                       background_classical,
+                       grid_fully_quantum,
+                       background_fully_quantum)
 
     screen.blit(background_classical, (0, 0))
     screen.blit(interspace, (WIN_WIDTH, 0))
