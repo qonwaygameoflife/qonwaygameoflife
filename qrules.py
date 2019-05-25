@@ -28,7 +28,7 @@ def SQGOL(nhood):
         value = (np.sqrt(2)+1)*(4-a)*alive+(a-3)*dead
     else:
         value = dead
-    value = value/np.sqrt(2)
+    value = value/np.linalg.norm(value)
     print(value)
     return value 
 
