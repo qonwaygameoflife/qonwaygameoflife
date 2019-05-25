@@ -119,8 +119,8 @@ def init_grid_file(file_path,
                    background_fully_quantum):
     with open(file_path) as json_file:
         data = json.load(json_file)
-        for row in data:
-            for elem in row:
+        for x, row in enumerate(data):
+            for y, elem in enumerate(row):
                 cell = json_cell(elem)
                 grid.setCell(x, y, cell)
                 drawSquare(background, x, y, cell)
