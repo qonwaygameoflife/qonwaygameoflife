@@ -89,6 +89,7 @@ venv/
 ENV/
 env.bak/
 venv.bak/
+QiskitEnv/
 
 # Spyder project settings
 .spyderproject
@@ -102,3 +103,8 @@ venv.bak/
 
 # mypy
 .mypy_cache/
+
+# VSCode / Qiskit
+.vscode/
+qiskit-vscode-log.out
+
