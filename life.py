@@ -67,10 +67,10 @@ class debugText():
 def init_grid(grid, background):
     for x in range(0, WIN_WIDTH // PIXEL_SIZE):
         for y in range(0, WIN_HEIGHT // PIXEL_SIZE):
-            a_pow = random.random()
-            b_pow = 1 - a_pow
+            a = random.random()
+            b = math.sqrt(1 - a**2)
 
-            grid.setCell(x, y, np.array([math.sqrt(a_pow),math.sqrt(b_pow)]))
+            grid.setCell(x, y, np.array([a,b]))
             drawSquare(background, x, y, grid.getCell(x,y))
 
 def drawSquare(background, x, y, array):
