@@ -14,8 +14,8 @@ def liveliness(nhood):
 def SQGOL(nhood):
     a = liveliness(nhood)
     value =  nhood[1][1]
-    alive = np.array([0.0,1.0])
-    dead = np.array([1.0,0.0])
+    alive = np.array([1.0,0.0])
+    dead = np.array([0.0,1.0])
     B = np.array([[0,0],[1,1]])
     D = np.array([[1,1],[0,0]])
     S = np.array([[1,0],[0,1]])
