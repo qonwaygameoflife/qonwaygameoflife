@@ -1,6 +1,8 @@
 import pygame, copy, math, random
 import numpy as np
-from qrules import SQGOL
+
+from qrules import SQGOL, liveliness
+
 pygame.init()
 
 PIXEL_SIZE = 5
@@ -8,6 +10,8 @@ WIN_WIDTH = 640
 WIN_HEIGHT = 480
 Y_LIMIT = WIN_HEIGHT // PIXEL_SIZE
 X_LIMIT = WIN_WIDTH // PIXEL_SIZE
+ALIVE = np.array([1,0])
+DEAD = np.array([0,1])
 
 #Update every 2ms
 REFRESH = 2
@@ -15,7 +19,7 @@ TARGET_FPS = 60
 
 class Grid():
     def __init__(self, *args, **kwargs):
-        self.grid = [[np.array([1,0]) for i in range(Y_LIMIT)] for i in range(X_LIMIT)]
+        self.grid = [[DEAD for i in range(Y_LIMIT)] for i in range(X_LIMIT)]
 
     def setCell(self, x, y, stat):
         self.grid[x][y] = stat
@@ -52,6 +56,7 @@ class Grid():
 
     def countNeighbours(self, x, y):
         neighbours = self.getNeighboursAround(x,y)
+        return liveliness(neighbours)
 
         count = 0
         for x in range(3):
@@ -80,23 +85,28 @@ class debugText():
 def init_grid(grid, background, grid2, background2):
     for x in range(X_LIMIT):
         for y in range(Y_LIMIT):
-            a = random.random()
-            b = math.sqrt(1 - a**2)
-            if b >= 0.55:
-                b = 1.
-                a = 0.
-            elif b <= 0.45:
-                b = 0.
-                a = 1.
-            grid.setCell(x, y, np.array([a,b]))
-            drawSquare(background, x, y, grid.getCell(x,y))
+            cell = random_cell()
+            grid.setCell(x, y, cell)
+            drawSquare(background, x, y, cell)
 
-            if b >= 0.5:
-                grid2.setCell(x, y, np.array([0,1]))
+            if cell[1] >= 0.5:
+                grid2.setCell(x, y, DEAD)
                 drawSquareClassic(background2, x, y)
             else:
-                grid2.setCell(x, y, np.array([1,0]))
+                grid2.setCell(x, y, ALIVE)
                 drawSquareClassic(background2, x, y)
+
+def random_cell():
+    a = random.random()
+    b = math.sqrt(1 - a**2)
+    if b >= 0.51:
+        b = 1.
+        a = 0.
+    elif b <= 0.48:
+        b = 0.
+        a = 1.
+
+    return np.array([a,b])
 
 def drawSquare(background, x, y, array):
     #Cell colour
@@ -110,7 +120,7 @@ def drawBlankSpace(background, x, y):
     pygame.draw.rect(background, colour, (x * PIXEL_SIZE, y * PIXEL_SIZE, PIXEL_SIZE, PIXEL_SIZE))
 
 def drawSquareClassic(background, x, y):
-    colour = random.randint(0,255), random.randint(0,255), random.randint(0,255)
+    colour = 255, 255, 255
     pygame.draw.rect(background, colour, (x * PIXEL_SIZE, y * PIXEL_SIZE, PIXEL_SIZE, PIXEL_SIZE))
 
 def main():
@@ -170,19 +180,20 @@ def main():
                     newgrid_quantum.setCell(x, y, SQGOL(subgrid))
                     drawSquare(background_quantum, x, y, newgrid_quantum.getCell(x,y))
 					#Classic game of life
-                    if (grid_classical.getCell(x, y) == np.array([0,1])).all():
-                        if grid_classical.countNeighbours(x, y) < 2:
-                            grid_classical.setCell(x, y, np.array([1,0]))
+                    if (grid_classical.getCell(x, y) == ALIVE).all():
+                        count = grid_classical.countNeighbours(x, y)
+                        if count < 2:
+                            newgrid_classical.setCell(x, y, DEAD)
 
-                        elif grid_classical.countNeighbours(x, y) <= 3:
-                            newgrid_classical.setCell(x, y, np.array([0,1]))
+                        elif count <= 3:
+                            newgrid_classical.setCell(x, y, ALIVE)
                             drawSquareClassic(background_classical, x, y)
 
-                        elif grid_classical.countNeighbours(x, y) >= 4:
-                            newgrid_classical.setCell(x, y, np.array([1,0]))
+                        elif count >= 4:
+                            newgrid_classical.setCell(x, y, DEAD)
                     else:
                         if grid_classical.countNeighbours(x, y) == 3:
-                            newgrid_classical.setCell(x, y, np.array([0,1]))
+                            newgrid_classical.setCell(x, y, ALIVE)
                             drawSquareClassic(background_classical, x, y)
 
             final = pygame.time.get_ticks()
@@ -204,14 +215,18 @@ def main():
                 while actionDown:
                     x = pygame.mouse.get_pos()[0] // PIXEL_SIZE
                     y = pygame.mouse.get_pos()[1] // PIXEL_SIZE
-                    newgrid.setCell(x, y, np.array([0,1]))
-                    drawSquare(background, x, y, newgrid.getCell(x,y))
+                    newgrid_classical.setCell(x, y, ALIVE)
+                    newgrid_quantum.setCell(x,y,random_cell())
+
+                    drawSquareClassic(background_classical, x, y)
+                    drawSquare(background_quantum, x, y, newgrid_quantum.getCell(x,y))
 
                     for event in pygame.event.get():
                         if event.type == pygame.MOUSEBUTTONUP:
                             actionDown = False
 
-                    screen.blit(background, (0, 0))
+                    screen.blit(background_classical, (0, 0))
+                    screen.blit(background_quantum, (WIN_WIDTH+100, 0))
                     pygame.display.flip()
 
         #Draws the new grid
