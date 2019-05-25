@@ -29,7 +29,8 @@ class Grid():
             for sub_y in range(3):
                 actual_x = x - 1 + sub_x
                 actual_y = y - 1 + sub_y
-                if actual_x < 0 or actual_y < 0:
+                if (actual_x < 0 or actual_x >= WIN_WIDTH // PIXEL_SIZE or
+                    actual_y < 0 or actual_y >= WIN_HEIGHT // PIXEL_SIZE):
                     cell = np.array([1,0])
                 else:
                     cell = self.getCell(actual_x, actual_y)
