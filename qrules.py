@@ -43,7 +43,7 @@ def init_quantum(nhood):
     qc.initialize(initial_state,[qr[1],qr[2]])
     qc.initialize(a,[qr[0]])
     qc.cx(qr[0],qr[1])
-    qc.initialize(av,[qr[0]])
+    qc.initialize(a,[qr[0]])
     qc.cx(qr[0],qr[1])
     qc.cx(qr[0],qr[2])
     qc.cx(qr[1],qr[0])
@@ -55,7 +55,6 @@ def init_quantum(nhood):
     del job
     value = partial_trace(results,[1,2])[0]
     value = np.real(value)
-    value = partial_trace(results,[1,2])
     return value
 
 def DSQGOL(nhood):
@@ -83,7 +82,7 @@ def DSQGOL(nhood):
             value = alive
         elif (a > 3.5):
             value = dead
-    elif value < 0.02:
+    elif a < 0.02:
         if (a < 1 ):
             value = dead
         elif (a > 1 and a <= 1.5):
