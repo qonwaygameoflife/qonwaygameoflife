@@ -63,21 +63,14 @@ def DSQGOL(nhood):
     a = liveliness(nhood)
 
     value =  nhood[1][1][0]
-    print(a)
     value =  nhood[1][1]
     alive = [1,0]
     dead = [0,1]
 
     if value[0] > 0.98:
-        if (a < 1 ):
-            value = dead
-        elif (a > 1 and a <= 1.5):
-
-    if value > 0.98:
         if (a <= 1.5 ):
             value = dead
         elif (a > 1.5 and a <= 2.5):
-            print('here')
             value = init_quantum(nhood)
             # qci, qri = init_quantum(nhood)
             # for i in range(9):
