@@ -49,24 +49,25 @@ def init_quantum(nhood):
     job = execute(qc,Aer.get_backend('statevector_simulator'))
     results = job.result().get_statevector()
     value = partial_trace(results,[1,2])
+    print(value)
     return value
      
     
 
-        
+      
 
 def DSQGOL(nhood):
     a = liveliness(nhood)
-    value =  nhood[1][1]
+    
+    value =  nhood[1][1][0]
     alive = [1,0]
     dead = [0,1]
     
-    if value[0] > 0.98:
-        if (a < 1 ):
-            value = dead
-        elif (a > 1 and a <= 1.5):
+    if value > 0.98:
+        if (a <= 1.5 ):
             value = dead
         elif (a > 1.5 and a <= 2.5):
+            print('here')
             value = init_quantum(nhood)
             # qci, qri = init_quantum(nhood)
             # for i in range(9):
@@ -79,7 +80,7 @@ def DSQGOL(nhood):
             value = alive
         elif (a > 3.5):
             value = dead
-    elif value[0] < 0.02:
+    elif value < 0.02:
         if (a < 1 ):
             value = dead
         elif (a > 1 and a <= 1.5):
