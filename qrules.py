@@ -60,8 +60,13 @@ def init_quantum(nhood):
 def DSQGOL(nhood):
 
     a = liveliness(nhood)
+<<<<<<< HEAD
     
     value =  nhood[1][1][0]
+=======
+    print(a)
+    value =  nhood[1][1]
+>>>>>>> parent of 2181c44... Update qrules.py
     alive = [1,0]
     dead = [0,1]
     
