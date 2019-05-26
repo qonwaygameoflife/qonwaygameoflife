@@ -139,8 +139,8 @@ def init_grid_file(file_path,
                 grid.setCell(final_x, final_y, cell)
                 drawSquare(background, final_x, final_y, cell)
 
-                grid_fully_quantum.setCell(x, y, cell)
-                drawSquare(background_fully_quantum, x, y, cell)
+                grid_fully_quantum.setCell(final_x, final_y, cell)
+                drawSquare(background_fully_quantum, final_x, final_y, cell)
 
                 if cell[1] >= 0.5:
                     grid2.setCell(final_x, final_y, DEAD)

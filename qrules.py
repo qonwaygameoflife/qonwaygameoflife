@@ -34,14 +34,15 @@ def SQGOL(nhood):
 
 def init_quantum(nhood):
     v=nhood
-    a = (v[0][0]+v[0][1]+v[0][2]+v[1][0]+v[1][2]+v[2][0]+v[2][1]+v[2][2])/8
-    a = a/np.linalg.norm(a[0])
+    av = (v[0][0]+v[0][1]+v[0][2]+v[1][0]+v[1][2]+v[2][0]+v[2][1]+v[2][2])/8
+    print(av)
+    av = av/np.linalg.norm(av)
     qr = QuantumRegister(3,'qr')
     qc = QuantumCircuit(qr,name='conway')
     counter  = 0
     initial_state = (1/np.sqrt(6))*np.array([2,1,0,1])
     qc.initialize(initial_state,[qr[1],qr[2]])
-    qc.initialize(a[0],[qr[0]])
+    qc.initialize(av,[qr[0]])
     qc.cx(qr[0],qr[1]) 
     qc.cx(qr[0],qr[2])
     qc.cx(qr[1],qr[0]) 
@@ -57,6 +58,7 @@ def init_quantum(nhood):
       
 
 def DSQGOL(nhood):
+
     a = liveliness(nhood)
     
     value =  nhood[1][1][0]
@@ -121,5 +123,7 @@ def DSQGOL(nhood):
             # job = execute(qci,Aer.get_backend('statevector_simulator'))
             # value = job.result().get_statevector()
         elif (a > 3.5):
-            value=dead     
+            value=dead    
+        print(value) 
+        value = np.array([1.,0.])
     return value
