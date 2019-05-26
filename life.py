@@ -104,6 +104,9 @@ def init_grid_random(sp_up_limit,
             grid.setCell(x, y, cell)
             drawSquare(background, x, y, cell)
 
+            grid_fully_quantum.setCell(x, y, cell)
+            drawSquare(background_fully_quantum, x, y, cell)
+
             if cell[1] >= 0.5:
                 grid2.setCell(x, y, DEAD)
                 drawSquareClassic(background2, x, y)
@@ -135,6 +138,9 @@ def init_grid_file(file_path,
 
                 grid.setCell(final_x, final_y, cell)
                 drawSquare(background, final_x, final_y, cell)
+
+                grid_fully_quantum.setCell(x, y, cell)
+                drawSquare(background_fully_quantum, x, y, cell)
 
                 if cell[1] >= 0.5:
                     grid2.setCell(final_x, final_y, DEAD)
@@ -247,7 +253,7 @@ def main(sp_up_limit, sp_down_limit, file_path):
     screen.blit(interspace, (WIN_WIDTH, 0))
     screen.blit(background_quantum, (WIN_WIDTH+WIN_INTERSPACE, 0))
     screen.blit(interspace_horizontal, (0, WIN_HEIGHT))
-    screen.blit(background_quantum, (WIN_WIDTH/2+WIN_INTERSPACE/2, WIN_HEIGHT+WIN_INTERSPACE))
+    screen.blit(background_fully_quantum, (WIN_WIDTH/2+WIN_INTERSPACE/2, WIN_HEIGHT+WIN_INTERSPACE))
     pygame.display.flip()
 
     while isActive:
