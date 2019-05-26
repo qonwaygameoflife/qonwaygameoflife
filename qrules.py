@@ -57,6 +57,7 @@ def init_quantum(nhood):
 
 def DSQGOL(nhood):
     a = liveliness(nhood)
+    print(a)
     value =  nhood[1][1]
     alive = [1,0]
     dead = [0,1]
