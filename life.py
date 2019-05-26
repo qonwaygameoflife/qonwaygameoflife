@@ -7,10 +7,10 @@ from qrules import DSQGOL, SQGOL, liveliness
 
 pygame.init()
 
-PIXEL_SIZE = 5
-LINE_WIDTH = 2
-WIN_WIDTH = 480
-WIN_HEIGHT = 360
+PIXEL_SIZE = 10
+LINE_WIDTH = 4
+WIN_WIDTH = 600
+WIN_HEIGHT = 400
 WIN_INTERSPACE = 50
 Y_LIMIT = WIN_HEIGHT // PIXEL_SIZE
 X_LIMIT = WIN_WIDTH // PIXEL_SIZE
@@ -57,9 +57,9 @@ class Grid():
 
                 cell = self.getCell(actual_x, actual_y)
 
-                row.append(cell)
+                row.append(np.array(cell))
 
-            neighbors.append(row)
+            neighbors.append(np.array(row))
 
         return neighbors
 
@@ -103,6 +103,9 @@ def init_grid_random(sp_up_limit,
             cell = random_cell(sp_up_limit, sp_down_limit)
             grid.setCell(x, y, cell)
             drawSquare(background, x, y, cell)
+
+            grid_fully_quantum.setCell(x, y, cell)
+            drawSquare(background_fully_quantum, x, y, cell)
 
             if cell[1] >= 0.5:
                 grid2.setCell(x, y, DEAD)

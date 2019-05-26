@@ -6,7 +6,7 @@ from qiskit.tools.qi.qi import partial_trace
 def liveliness(nhood):
     v=nhood
     a = v[0][0][0]+v[0][1][0]+v[0][2][0]+v[1][0][0]+v[1][2][0]+v[2][0][0]+v[2][1][0]+v[2][2][0]
-    
+
     return a
 
 
@@ -30,38 +30,41 @@ def SQGOL(nhood):
     elif a >= 4:
         value = dead
     value = value/np.linalg.norm(value)
-    return value 
+    return value
 
 def init_quantum(nhood):
     v=nhood
     a = (v[0][0]+v[0][1]+v[0][2]+v[1][0]+v[1][2]+v[2][0]+v[2][1]+v[2][2])/8
-    a = a/np.linalg.norm(a[0])
+    a = a/np.linalg.norm(a)
     qr = QuantumRegister(3,'qr')
     qc = QuantumCircuit(qr,name='conway')
     counter  = 0
     initial_state = (1/np.sqrt(6))*np.array([2,1,0,1])
     qc.initialize(initial_state,[qr[1],qr[2]])
-    qc.initialize(a[0],[qr[0]])
-    qc.cx(qr[0],qr[1]) 
+    qc.initialize(a,[qr[0]])
+    qc.cx(qr[0],qr[1])
     qc.cx(qr[0],qr[2])
-    qc.cx(qr[1],qr[0]) 
-    qc.cx(qr[2],qr[0]) 
+    qc.cx(qr[1],qr[0])
+    qc.cx(qr[2],qr[0])
     job = execute(qc,Aer.get_backend('statevector_simulator'))
     results = job.result().get_statevector()
-    value = partial_trace(results,[1,2])
+    del qr
+    del qc
+    del job
+    value = partial_trace(results,[1,2])[0]
+    value = np.real(value)
     return value
-     
-    
 
-        
+
+
+
 
 def DSQGOL(nhood):
     a = liveliness(nhood)
-    print(a)
     value =  nhood[1][1]
     alive = [1,0]
     dead = [0,1]
-    
+
     if value[0] > 0.98:
         if (a < 1 ):
             value = dead
@@ -97,7 +100,7 @@ def DSQGOL(nhood):
         elif (a > 2.5 and a <= 3.5):
             value = alive
         elif (a > 3.5):
-            value = dead   
+            value = dead
     else:
         if (a < 1 ):
             value = dead
@@ -121,5 +124,5 @@ def DSQGOL(nhood):
             # job = execute(qci,Aer.get_backend('statevector_simulator'))
             # value = job.result().get_statevector()
         elif (a > 3.5):
-            value=dead     
+            value=dead
     return value
