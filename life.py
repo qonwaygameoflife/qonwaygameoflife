@@ -3,7 +3,7 @@ import numpy as np
 import argparse
 import json
 
-from qrules import SQGOL, liveliness
+from qrules import DSQGOL, SQGOL, liveliness
 
 pygame.init()
 
@@ -282,6 +282,10 @@ def main(sp_up_limit, sp_down_limit, file_path):
                             newgrid_classical.setCell(x, y, ALIVE)
                             drawSquareClassic(background_classical, x, y)
 
+                    subgrid_fully_quantum = grid_fully_quantum.getNeighboursAround(x, y)
+                    newgrid_fully_quantum.setCell(x, y, DSQGOL(subgrid_fully_quantum))
+                    drawSquare(background_fully_quantum, x, y, newgrid_fully_quantum.getCell(x,y))
+
             final = pygame.time.get_ticks()
 
         else:
@@ -328,7 +332,7 @@ def main(sp_up_limit, sp_down_limit, file_path):
         screen.blit(interspace, (WIN_WIDTH, 0))
         screen.blit(background_quantum, (WIN_WIDTH+WIN_INTERSPACE, 0))
         screen.blit(interspace_horizontal, (0, WIN_HEIGHT))
-        screen.blit(background_quantum, (WIN_WIDTH/2+WIN_INTERSPACE/2, WIN_HEIGHT+WIN_INTERSPACE))
+        screen.blit(background_fully_quantum, (WIN_WIDTH/2+WIN_INTERSPACE/2, WIN_HEIGHT+WIN_INTERSPACE))
         debug.update()
         debug.printText()
         pygame.display.flip()
