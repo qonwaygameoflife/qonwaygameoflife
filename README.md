@@ -12,3 +12,6 @@ python life.py seedfile.txt
 or python life.py lower_bound upper_bound 
 where lower bound and upper bound are floats between 0 and 1 
 
+Semi quantum simulation is based on https://arxiv.org/pdf/1902.07835.pdf
+The quantum kernel is original.
+
