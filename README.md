@@ -8,7 +8,7 @@ To apply quantum computing to [Conway's Game of Life](https://en.wikipedia.org/w
 * First to try to speed up the generation of new cells
 * And then we updated the rules to incorporate quantum physics 
 
-For more details, please have a look to [our presentation](https://raw.githubusercontent.com/qonwaygameoflife/qonwaygameoflife/reformat/presentation/n_dimensional_quantum_game_of_life.pdf).
+For more details, please have a look to [our presentation](https://raw.githubusercontent.com/qonwaygameoflife/qonwaygameoflife/master/presentation/n_dimensional_quantum_game_of_life.pdf).
 
 ## Show me the code
 
@@ -26,7 +26,7 @@ In order to run this code, you have to clone this repo & prepare a python virtua
 
 ### Qonway's Game of Life
 
-![Qonway's Game of Life](https://raw.githubusercontent.com/qonwaygameoflife/qonwaygameoflife/reformat/images/life.jpeg)
+![Qonway's Game of Life](https://raw.githubusercontent.com/qonwaygameoflife/qonwaygameoflife/master/images/life.jpeg)
 
 These are three renditions of the quantum game of life - top left is the classical game of life, top right is the semi quantum version
 and the bottom is a fully quantum kernel rendition. The fully quantum kernel uses a quantum cloning machine to bring cells to life as an average of the neighbouring cells.
@@ -54,7 +54,7 @@ All parameters are optional, if none is informed the entire board is randomly in
 
 Notice that `--sp_up` and `--sp_down` are float values between 0 and 1. Also, they are ignored if `--json` is informed.
 
-We also provide a few JSON seeds you can try in [gol_2d/seeds](https://github.com/qonwaygameoflife/qonwaygameoflife/tree/reformat/gol_2d/seeds):
+We also provide a few JSON seeds you can try in [gol_2d/seeds](https://github.com/qonwaygameoflife/qonwaygameoflife/tree/master/gol_2d/seeds):
 
 ```
 (QiskitEnv) > python gol_2d/life.py --json gol_2d/seeds/waitforit.json
@@ -67,7 +67,7 @@ We also provide a few JSON seeds you can try in [gol_2d/seeds](https://github.co
 
 ### 1D Quantum Game of Life
 
-![1D Quantum Game of Life](https://raw.githubusercontent.com/qonwaygameoflife/qonwaygameoflife/reformat/images/onedgameoflife.jpeg)
+![1D Quantum Game of Life](https://raw.githubusercontent.com/qonwaygameoflife/qonwaygameoflife/master/images/onedgameoflife.jpeg)
 
 In this case, instead of a 2D board to code the Game of Life, we use a 1D quantum register. By putting the qubits in different states as if they were cells: alive (|1>), dead (|0>) or neither alive nor dead (superposition), the idea was to produce all possible results by sequentially applying the same Truth Table Oracle which coded the dead/alive rules. However:
 * The resulting circuit was (as you can see above) huge
