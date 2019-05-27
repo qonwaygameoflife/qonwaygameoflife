@@ -21,7 +21,7 @@ In order to run this code, you have to clone this repo & prepare a python virtua
 > cd qonwaygameoflife/
 > python3 -m virtualenv QiskitEnv
 > source QiskitEnv/bin/activate
-(QiskitEnv) > pip install qiskit qiskit-aqua qiskit-chemistry pygame
+(QiskitEnv) > pip install -r requirements.txt
 ```
 
 ### Qonway's Game of Life
