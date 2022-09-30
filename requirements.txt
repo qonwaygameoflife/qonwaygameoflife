@@ -12,7 +12,7 @@ fastdtw==0.3.2
 h5py==2.9.0
 idna==2.8
 inflection==0.3.1
-joblib==0.13.2
+joblib==1.2.0
 jsonschema==2.6.0
 marshmallow==2.19.2
 marshmallow-polyfield==3.2
