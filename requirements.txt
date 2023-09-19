@@ -3,7 +3,7 @@ certifi==2019.3.9
 cffi==1.12.3
 chardet==3.0.4
 cryptography==3.2
-cvxopt==1.2.3
+cvxopt==1.2.7
 decorator==4.4.0
 dlx==1.0.4
 docloud==1.0.369
