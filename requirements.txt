@@ -31,7 +31,7 @@ pycparser==2.19
 pyeda==0.28.0
 pygame==1.9.6
 pylatexenc==1.4
-pyOpenSSL==19.0.0
+pyOpenSSL==26.0.0
 pyscf==1.6.1.post1
 python-dateutil==2.8.0
 pytz==2019.1
