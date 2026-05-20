@@ -10,7 +10,7 @@ docloud==1.0.369
 docplex==2.9.141
 fastdtw==0.3.2
 h5py==2.9.0
-idna==3.7
+idna==3.15
 inflection==0.3.1
 joblib==1.2.0
 jsonschema==2.6.0
